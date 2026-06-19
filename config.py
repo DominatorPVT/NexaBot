@@ -8,7 +8,7 @@ BOT_VERSION = "1.0.0"
 OWNER_ID = 0    # Example: 123456789 👈 replace with your ID
 ADMIN_IDS = []   # Example: [123456789, 987654321]
 
-MONGO_URI = "mongodb+srv://username:password@cluster.mongodb.net/nexabot"
+MONGO_URI = "mongodb+srv://bikash:bikash@bikash.3jkvhp7.mongodb.net/?retryWrites=true&w=majority"
 DB_NAME   = "nexabot"
 
 UNO_STICKER_PACK_URL = "https://t.me/addstickers/classic_colorblind"

@@ -102,7 +102,24 @@ app = Client(
 async def main():
     logger.info(f"🚀 Starting {BOT_NAME}...")
     await connect_db()          # 🍃 connect MongoDB before bot starts
-    await app.start()
+
+    try:
+        await app.start()
+    except Exception as e:
+        # Telegram only allows ONE active connection per bot token at a time.
+        # If another instance of this bot is already running anywhere else
+        # (another Action run, a VPS, your local machine), this start will
+        # fail or the bot will appear online but receive no updates.
+        logger.error(f"❌ Failed to start the bot: {e}")
+        logger.error(
+            "🛑 If this bot is already running somewhere else (another "
+            "GitHub Action run, a VPS, or your local machine), stop that "
+            "instance first — Telegram only allows one active connection "
+            "per bot token at a time."
+        )
+        await close_db()
+        sys.exit(1)
+
     me = await app.get_me()
     logger.info(f"✅ {BOT_NAME} is online as @{me.username}")
     logger.info("🤖 Bot is now listening for messages...")

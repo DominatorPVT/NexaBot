@@ -1,0 +1,21 @@
+# .gitlab-ci.yml - NexaBot manual hosting pipeline 🚀
+# This pipeline only runs when manually triggered from the GitLab UI.
+# It will keep the bot running until the job times out, then you must
+# manually trigger it again from the Pipelines page. 🔁
+
+stages:
+  - run
+
+run-bot:
+  stage: run
+  image: python:3.11-slim
+  rules:
+    - when: manual          # 👈 manual trigger only, never runs automatically
+  timeout: 5h 30m            # GitLab default job timeout cap; adjust in project CI/CD settings if needed
+  script:
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+    - sed -i "s|YOUR_BOT_TOKEN_HERE|$BOT_TOKEN|" config.py
+    - sed -i "s|mongodb+srv://username:password@cluster.mongodb.net/nexabot|$MONGO_URI|" config.py
+    - sed -i "s|OWNER_ID = 0|OWNER_ID = $OWNER_ID|" config.py
+    - python bot.py
